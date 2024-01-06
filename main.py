@@ -40,8 +40,7 @@ def load_data_set(link, name):
     resp=requests.get(f'{link[0]}/{name}?begin={link[1]}&end={link[2]}')
     r=resp.json()
     df=pd.DataFrame(r)
-    #df['datetime']=pd.to_datetime(df['datetime']).dt.date
-    
+        
     return(df)
 
 
@@ -54,7 +53,7 @@ def plot_total_bar(x, y, title, x_name, y_name):
     x_list=x.tolist()
     y_list=y.tolist()
         
-    plt.figure(figsize=(12, 8)) 
+    plt.figure(figsize=(14, 7)) 
     
     for i in range (len(x_list)):
         plt.text(x_list[i], y_list[i], y_list[i])
@@ -64,10 +63,10 @@ def plot_total_bar(x, y, title, x_name, y_name):
     plt.xlabel(x_name)
     plt.ylabel(y_name)
     plt.grid(axis='y')
-    plt.xticks(x_list, rotation=45)
+    plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./{title}.png')
+    plt.savefig(f'./charts/{title}.png')
     plt.close()
 
 
@@ -78,10 +77,10 @@ def plot_total_bar(x, y, title, x_name, y_name):
 def plot_by_type_bar(df, x, y, z, title, x_name, y_name):
     
     new=pd.pivot_table(df, index=x, columns=z, values=y)
-    ax=new.plot(kind='bar', stacked=True, rot=45, figsize=(12, 8),
+    ax=new.plot(kind='bar', stacked=True, rot=45, fontsize=8, figsize=(14, 7),
                 xlabel=x_name, ylabel=y_name, grid=True, title=title)
     plt.tight_layout()
-    plt.savefig(f'./{title}.png')
+    plt.savefig(f'./charts/{title}.png')
     plt.close()
 
 
@@ -94,7 +93,7 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
     df1=data1.groupby([lable_1]).agg({value:'sum'}).reset_index()
     df2=data2.groupby([lable_2]).agg({value:'sum'}).reset_index()
     
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(10, 6))
     
     plt.subplot(1, 2, 1)
     plt.pie(x=df1[value], labels=df1[lable_1],
@@ -107,7 +106,7 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
     plt.title('Registration by Registration Type') 
 
     plt.tight_layout()  
-    plt.savefig('./registrations_pie.png')
+    plt.savefig('./charts/registrations_pie.png')
     plt.close()
 
 
@@ -117,7 +116,7 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
 # график общей конверсии
 def plot_line(x, y, title, x_name, y_name):
     
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(14, 7))
     plt.plot(x, y)
     
     x_list=x.tolist()
@@ -130,10 +129,10 @@ def plot_line(x, y, title, x_name, y_name):
     plt.xlabel(x_name)
     plt.ylabel(y_name)
     plt.grid(axis='y')
-    plt.xticks(x_list, rotation=45)
+    plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./{title}.png')
+    plt.savefig(f'./charts/{title}.png')
     plt.close()
 
 
@@ -148,7 +147,7 @@ def plot_conversion(df, x, y, types, x_name, y_name):
     x_list=df_plot[x].tolist()
     y_list=df_plot[y].tolist()
     
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(14, 7))
     plt.plot(x_list, y_list)
     
     for i in range (len(x_list)):
@@ -158,10 +157,10 @@ def plot_conversion(df, x, y, types, x_name, y_name):
     plt.xlabel(x_name)
     plt.ylabel(y_name)
     plt.grid(axis='y')
-    plt.xticks(x_list, rotation=45)
+    plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./conversion {types}.png')
+    plt.savefig(f'./charts/conversion {types}.png')
     plt.close()
 
 
@@ -171,7 +170,7 @@ def plot_conversion(df, x, y, types, x_name, y_name):
 # визиты и регистрации с учётом рекламных кампаний
 def plot_by_ads(df, x, y, z, title):
     
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(14, 7))
     
     ax.plot(df[x], df[y], label=y)
     
@@ -211,17 +210,17 @@ def plot_by_ads(df, x, y, z, title):
     ax.set_xlim(df[x].min(), df[x].max())
     ax.set_ylim(0, height)
     
-    ax.set_xticks(x_list[::7])
+    ax.set_xticks(x_list)
     ax.set_yticks(np.arange (0, height, round((height/15), -1)))
     
     ax.tick_params(axis='y', labelsize=10)
-    ax.tick_params(axis='x', labelsize=10, labelrotation=45)
+    ax.tick_params(axis='x', labelsize=8, labelrotation=45)
     plt.tight_layout()
-    plt.savefig(f'./{title}.png')
+    plt.savefig(f'./charts/{title}.png')
     plt.close()
 
 
-# In[12]:
+# In[10]:
 
 
 def run_all():
@@ -262,52 +261,40 @@ def run_all():
     out['cost']=out['cost'].fillna(0)
     out['campaign']=out['campaign'].fillna('none')
     out=out.sort_values(by=['date_group'])
-    out.to_json('./ads.json')
-    
-    # дополнительные преобразования для построения графиков: укрупнение интервалаов до недели
-    conversion['week']=pd.to_datetime(conversion['date_group']).dt.isocalendar().week
-    conversion_weeks=conversion.drop(['date_group', 'conversion'], axis=1).groupby(['week', 'platform']).agg('sum').reset_index()
-    conversion_weeks['conversion']=conversion_weeks['registrations']/conversion_weeks['visits']*100
-    conversion_weeks['conversion']=conversion_weeks['conversion'].round(1)
-    
-    out['week']=pd.to_datetime(out['date_group']).dt.isocalendar().week
-    out_weeks=out.drop(['date_group', 'conversion'], axis=1).groupby(['week']).agg('sum').reset_index()
-    out_weeks['conversion']=out_weeks['registrations']/out_weeks['visits']*100
-    out_weeks['conversion']=out_weeks['conversion'].round(1)
-    
+    out.to_json('./out.json')
+       
     # для графиков зависимости регистраций от площадки прихода
-    df_registrations['week']=pd.to_datetime(df_registrations['datetime']).dt.isocalendar().week
-    data_reg=df_registrations.drop(['datetime'], axis=1).groupby(['week', 'registration_type']).agg({'user_id':'count'}).reset_index()
+    data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
     
     # шаг 5 строим графики
         # графики общих визитов и регистраций по дням
-    plot_total_bar(out_weeks['week'], out_weeks['visits'], 'Visits Count', 'weeks', 'visits_count')
-    plot_total_bar(out_weeks['week'], out_weeks['visits'], 'Registrations Count', 'weeks', 'registrations_count')
+    plot_total_bar(out['date_group'], out['visits'], 'Visits Count', 'date', 'visits_count')
+    plot_total_bar(out['date_group'], out['registrations'], 'Registrations Count', 'date', 'registrations_count')
     
         # графики визитов и регистраций в зависимости от платформы или типа регистрации
-    plot_by_type_bar(conversion_weeks, 'week', 'visits', 'platform', 'Visits by Platform', 'weeks', 'visits_count_by_platform')
-    plot_by_type_bar(conversion_weeks, 'week', 'registrations', 'platform', 'Registrations by Platform', 'weeks', 'registrations_count_by_platform')
+    plot_by_type_bar(conversion, 'date_group', 'visits', 'platform', 'Visits by Platform', 'date', 'visits_count_by_platform')
+    plot_by_type_bar(conversion, 'date_group', 'registrations', 'platform', 'Registrations by Platform', 'date', 'registrations_count_by_platform')
     
-    plot_by_type_bar(data_reg, 'week', 'user_id', 'registration_type', 'Registrations by Registration Type', 'weeks', 'registrations_count_by_type')
+    plot_by_type_bar(data_reg, 'datetime', 'user_id', 'registration_type', 'Registrations by Registration Type', 'date', 'registrations_count_by_type')
    
         # pie chart регистраций
     plot_pie(r_st3, data_reg, 'user_id', 'platform', 'registration_type')
     
         # строим конверсии: общую и по платформам
-    plot_line(out_weeks['week'], out_weeks['conversion'], 'Overall Conversion', 'weeks', 'conversion (%)')
-    plot_conversion(conversion_weeks, 'week', 'conversion', 'android', 'weeks', 'conversion (%)')
-    plot_conversion(conversion_weeks, 'week', 'conversion', 'android', 'weeks', 'conversion (%)')
-    plot_conversion(conversion_weeks, 'week', 'conversion', 'ios', 'weeks', 'conversion (%)')
-    plot_conversion(conversion_weeks, 'week', 'conversion', 'web', 'weeks', 'conversion (%)')
+    plot_line(out['date_group'], out['conversion'], 'Overall Conversion', 'date', 'conversion (%)')
+    plot_conversion(conversion, 'date_group', 'conversion', 'android', 'date', 'conversion (%)')
+    plot_conversion(conversion, 'date_group', 'conversion', 'android', 'date', 'conversion (%)')
+    plot_conversion(conversion, 'date_group', 'conversion', 'ios', 'date', 'conversion (%)')
+    plot_conversion(conversion, 'date_group', 'conversion', 'web', 'date', 'conversion (%)')
     
         # строим данные с учётом рекламы
-    plot_line(out_weeks['week'], out_weeks['cost'], 'Ads Cost by Date', 'weeks', 'cost (RUB)')
+    plot_line(out['date_group'], out['cost'], 'Ads Cost by Date', 'date', 'cost (RUB)')
     plot_by_ads(out, 'date_group', 'visits', 'campaign', 'Visits During Ad Campaign')
     plot_by_ads(out, 'date_group', 'registrations', 'campaign', 'Registrations During Ad Campaign')
     
 
 
-# In[13]:
+# In[11]:
 
 
 run_all()
