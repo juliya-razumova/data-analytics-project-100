@@ -11,8 +11,6 @@ import json
 from dotenv import load_dotenv, find_dotenv
 import os
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import FixedLocator
-from matplotlib.pyplot import FixedFormatter
 import matplotlib
 
 
