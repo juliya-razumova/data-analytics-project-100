@@ -66,7 +66,7 @@ def plot_total_bar(x, y, title, x_name, y_name):
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
     plt.savefig(f'./charts/{title}.png')
-    #plt.close()
+    plt.close()
 
 
 # In[5]:
@@ -80,7 +80,7 @@ def plot_by_type_bar(df, x, y, z, title, x_name, y_name):
                 xlabel=x_name, ylabel=y_name, grid=True, title=title)
     plt.tight_layout()
     plt.savefig(f'./charts/{title}.png')
-    #plt.close()
+    plt.close()
 
 
 # In[6]:
@@ -106,7 +106,7 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
 
     plt.tight_layout()  
     plt.savefig('./charts/registrations_pie.png')
-    #plt.close()
+    plt.close()
 
 
 # In[7]:
@@ -132,7 +132,7 @@ def plot_line(x, y, title, x_name, y_name):
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
     plt.savefig(f'./charts/{title}.png')
-    #plt.close()
+    plt.close()
 
 
 # In[8]:
@@ -216,7 +216,7 @@ def plot_by_ads(df, x, y, z, title):
     ax.tick_params(axis='x', labelsize=8, labelrotation=45)
     plt.tight_layout()
     plt.savefig(f'./charts/{title}.png')
-    #plt.close()
+    plt.close()
 
 
 # In[10]:
