@@ -6,7 +6,7 @@ authors = ["juliya-razumova <juliya.razumova@yandex.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">3.9"
+python = ">3.9,<4.0"
 pandas = "^2.1.4"
 numpy = "^1.26.3"
 python-dotenv = "^1.0.0"

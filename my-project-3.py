@@ -12,6 +12,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import matplotlib.pyplot as plt
 import matplotlib
+from pathlib import Path
 
 
 # In[2]:
@@ -263,8 +264,9 @@ def run_all():
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
     
     #создаём директорию для хранения файлов
-    if not os.path.isdir("charts"):
-        os.mkdir("charts")
+    p=Path.cwd()
+    if not os.path.isdir(f"{p}/charts"):
+        os.mkdir(f"{p}/charts")
     
     # шаг 5 строим графики
         # графики общих визитов и регистраций по дням
