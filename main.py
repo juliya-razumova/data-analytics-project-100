@@ -40,6 +40,7 @@ def load_data_set(link, name):
     resp=requests.get(f'{link[0]}/{name}?begin={link[1]}&end={link[2]}')
     r=resp.json()
     df=pd.DataFrame(r)
+    df['datetime']=pd.to_datetime(df['datetime']).dt.date
         
     return(df)
 
@@ -123,7 +124,7 @@ def plot_line(x, y, title, x_name, y_name):
     y_list=y.tolist()
     
     for i in range (len(x_list)):
-        plt.text(x_list[i], y_list[i], y_list[i])
+        plt.text(x_list[i], y_list[i], round(y_list[i], 1))
     
     plt.title(title)
     plt.xlabel(x_name)
@@ -151,7 +152,7 @@ def plot_conversion(df, x, y, types, x_name, y_name):
     plt.plot(x_list, y_list)
     
     for i in range (len(x_list)):
-        plt.text(x_list[i], y_list[i], y_list[i])
+        plt.text(x_list[i], y_list[i], round(y_list[i], 1))
     
     plt.title(f'conversion {types}')
     plt.xlabel(x_name)
@@ -230,32 +231,24 @@ def run_all():
     df_visits=load_data_set(link, 'visits')
     df_visits=df_visits[df_visits['platform']!='bot']
     df_registrations=load_data_set(link, 'registrations')
-    df_registrations['datetime']=pd.to_datetime(df_registrations['datetime']).dt.date
-    
-    # избавляемся от дублей в visit_id, используем модель last_click
-    v_last=df_visits.groupby(['visit_id']).agg({'datetime':'max'}).reset_index()
-    df=pd.merge(v_last, df_visits, on=['visit_id', 'datetime'], how='left').reset_index()
-    df['datetime']=pd.to_datetime(df['datetime']).dt.date
     
     # шаг 3 объединяем данные визитов и регистраций
-    v_st3=df.groupby(['datetime', 'platform']).agg({'visit_id':'count'}).reset_index()
+    v_st3=df_visits.groupby(['datetime', 'platform']).agg({'visit_id':'count'}).reset_index()
     r_st3=df_registrations.groupby(['datetime', 'platform']).agg({'user_id':'nunique'}).reset_index()
     conversion=pd.merge(v_st3, r_st3, on=['datetime', 'platform'])
     
     # шаг 3 считаем конверсию
-    conversion['conversion']=conversion['user_id']/conversion['visit_id']*100
-    conversion['conversion']=conversion['conversion'].round(1)                                                                              
+    conversion['conversion']=conversion['user_id']/conversion['visit_id']*100                                                                            
     conversion.rename(columns={'datetime':'date_group', 'visit_id':'visits', 'user_id':'registrations'}, inplace=True)
     conversion=conversion.sort_values(by='date_group')
     conversion.to_json('./conversion.json')
     
     # шаг 4 добавляем данные рекламы к общей базе данных
-    ads=pd.read_csv('./ads.csv')
+    ads=pd.read_csv('ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
     total_conversion['conversion']=total_conversion['registrations']/total_conversion['visits']*100
-    total_conversion['conversion']=total_conversion['conversion'].round(1)
     out=pd.merge(total_conversion, ads[['date','cost', 'utm_campaign']], left_on='date_group', right_on='date', how='left').drop(['date'], axis=1)
     out.rename(columns={'utm_campaign':'campaign'}, inplace=True)
     out['cost']=out['cost'].fillna(0)
@@ -265,6 +258,10 @@ def run_all():
        
     # для графиков зависимости регистраций от площадки прихода
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
+    
+    #создаём директорию для хранения файлов
+    if not os.path.isdir("charts"):
+        os.mkdir("charts")
     
     # шаг 5 строим графики
         # графики общих визитов и регистраций по дням
