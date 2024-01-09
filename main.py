@@ -232,8 +232,12 @@ def run_all():
     df_visits=df_visits[df_visits['platform']!='bot']
     df_registrations=load_data_set(link, 'registrations')
     
+    # выбираем visit_id по модели last_click
+    df_last=df_visits.groupby(['visit_id']).agg({'datetime':'max'}).reset_index()
+    df=pd.merge(df_last, df_visits, on=['visit_id', 'datetime']).reset_index()
+    
     # шаг 3 объединяем данные визитов и регистраций
-    v_st3=df_visits.groupby(['datetime', 'platform']).agg({'visit_id':'count'}).reset_index()
+    v_st3=df.groupby(['datetime', 'platform']).agg({'visit_id':'count'}).reset_index()
     r_st3=df_registrations.groupby(['datetime', 'platform']).agg({'user_id':'nunique'}).reset_index()
     conversion=pd.merge(v_st3, r_st3, on=['datetime', 'platform'])
     
@@ -244,7 +248,7 @@ def run_all():
     conversion.to_json('./conversion.json')
     
     # шаг 4 добавляем данные рекламы к общей базе данных
-    ads=pd.read_csv('ads.csv')
+    ads=pd.read_csv('./ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
@@ -254,7 +258,7 @@ def run_all():
     out['cost']=out['cost'].fillna(0)
     out['campaign']=out['campaign'].fillna('none')
     out=out.sort_values(by=['date_group'])
-    out.to_json('./out.json')
+    out.to_json('../ads.json')
        
     # для графиков зависимости регистраций от площадки прихода
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
