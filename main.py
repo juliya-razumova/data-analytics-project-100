@@ -248,7 +248,8 @@ def run_all():
     conversion.to_json('./conversion.json')
     
     # шаг 4 добавляем данные рекламы к общей базе данных
-    ads=pd.read_csv('../ads.csv')
+    absolute_path = os.path.abspath(os.path.dirname('ads.csv'))
+    ads=pd.read_csv(absolute_path + '/ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
@@ -258,7 +259,7 @@ def run_all():
     out['cost']=out['cost'].fillna(0)
     out['campaign']=out['campaign'].fillna('none')
     out=out.sort_values(by=['date_group'])
-    out.to_json('../ads.json')
+    out.to_json('./ads.json')
        
     # для графиков зависимости регистраций от площадки прихода
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
