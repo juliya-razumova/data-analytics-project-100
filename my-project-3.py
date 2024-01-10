@@ -232,8 +232,8 @@ def run_all():
     df_registrations=load_data_set(link, 'registrations')
     
     # выбираем visit_id по модели last_click
-    df_last=df_visits.groupby(['visit_id']).agg({'datetime':'max'}).reset_index()
-    df=pd.merge(df_last, df_visits, on=['visit_id', 'datetime']).reset_index()
+    df=df_visits.sort_values(by='datetime')
+    df=df.drop_duplicates(subset='visit_id', keep='last')
     
     # шаг 3 объединяем данные визитов и регистраций
     v_st3=df.groupby(['datetime', 'platform']).agg({'visit_id':'count'}).reset_index()
@@ -299,8 +299,7 @@ def run_all():
 # In[11]:
 
 
-if __name__ == '__main__':
-    run_all()
+run_all()
 
 
 # In[ ]:
