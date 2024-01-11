@@ -66,7 +66,7 @@ def plot_total_bar(x, y, title, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./charts/{title}.png')
+    plt.savefig(f'./charts_project/charts/{title}.png')
     plt.close()
 
 
@@ -80,7 +80,7 @@ def plot_by_type_bar(df, x, y, z, title, x_name, y_name):
     ax=new.plot(kind='bar', stacked=True, rot=45, fontsize=8, figsize=(14, 7),
                 xlabel=x_name, ylabel=y_name, grid=True, title=title)
     plt.tight_layout()
-    plt.savefig(f'./charts/{title}.png')
+    plt.savefig(f'./charts_project/charts/{title}.png')
     plt.close()
 
 
@@ -106,7 +106,7 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
     plt.title('Registration by Registration Type') 
 
     plt.tight_layout()  
-    plt.savefig('./charts/registrations_pie.png')
+    plt.savefig('./charts_project/charts/registrations_pie.png')
     plt.close()
 
 
@@ -132,7 +132,7 @@ def plot_line(x, y, title, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./charts/{title}.png')
+    plt.savefig(f'./charts_project/charts/{title}.png')
     plt.close()
 
 
@@ -160,7 +160,7 @@ def plot_conversion(df, x, y, types, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
-    plt.savefig(f'./charts/conversion {types}.png')
+    plt.savefig(f'./charts_project/charts/conversion {types}.png')
     plt.close()
 
 
@@ -216,7 +216,7 @@ def plot_by_ads(df, x, y, z, title):
     ax.tick_params(axis='y', labelsize=10)
     ax.tick_params(axis='x', labelsize=8, labelrotation=45)
     plt.tight_layout()
-    plt.savefig(f'./charts/{title}.png')
+    plt.savefig(f'./charts_project/charts/{title}.png')
     plt.close()
 
 
@@ -248,7 +248,7 @@ def run_all():
     
     # шаг 4 добавляем данные рекламы к общей базе данных
     absolute_path = os.path.abspath(os.path.dirname('ads.csv'))
-    ads=pd.read_csv(absolute_path + '/ads.csv')
+    ads=pd.read_csv(absolute_path+'/charts_project'+'/ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
@@ -264,7 +264,8 @@ def run_all():
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
     
     #создаём директорию для хранения файлов
-    p=Path.cwd()
+    p=os.path.abspath(os.path.dirname('main.py'))
+    p=p+'/charts_project'
     if not os.path.isdir(f"{p}/charts"):
         os.mkdir(f"{p}/charts")
     
