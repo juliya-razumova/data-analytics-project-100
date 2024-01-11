@@ -1,0 +1,6 @@
+__pycache__
+dist/
+.venv/
+.ipynb_checkpoints
+old/
+ads.csv
