@@ -247,8 +247,8 @@ def run_all():
     conversion.to_json('./conversion.json')
     
     # шаг 4 добавляем данные рекламы к общей базе данных
-    absolute_path = Path.cwd()
-    ads=pd.read_csv(f'{absolute_path}/charts_project/data/ads.csv')
+    #absolute_path = Path.cwd()
+    ads=pd.read_csv('./charts_project/data/ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
