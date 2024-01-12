@@ -248,7 +248,7 @@ def run_all():
     
     # шаг 4 добавляем данные рекламы к общей базе данных
     #absolute_path = os.path.abspath(os.path.dirname('ads.csv'))
-    ads=pd.read_csv('./ads.csv')
+    ads=pd.read_csv('./data/ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
