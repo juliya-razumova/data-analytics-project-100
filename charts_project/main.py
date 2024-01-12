@@ -265,7 +265,7 @@ def run_all():
     
     #создаём директорию для хранения файлов
     #p=Path.cwd()
-    if not os.path.isdir("{./charts"):
+    if not os.path.isdir("./charts"):
         os.mkdir("./charts")
     
     # шаг 5 строим графики
