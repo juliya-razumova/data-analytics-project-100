@@ -66,6 +66,8 @@ def plot_total_bar(x, y, title, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig(f'./charts/{title}.png')
     plt.close()
 
@@ -80,6 +82,8 @@ def plot_by_type_bar(df, x, y, z, title, x_name, y_name):
     ax=new.plot(kind='bar', stacked=True, rot=45, fontsize=8, figsize=(14, 7),
                 xlabel=x_name, ylabel=y_name, grid=True, title=title)
     plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig(f'./charts/{title}.png')
     plt.close()
 
@@ -105,7 +109,9 @@ def plot_pie(data1, data2, value, lable_1, lable_2):
             autopct='%1.1f%%', textprops={'fontsize':12})              
     plt.title('Registration by Registration Type') 
 
-    plt.tight_layout()  
+    plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig('./charts/registrations_pie.png')
     plt.close()
 
@@ -132,6 +138,8 @@ def plot_line(x, y, title, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig(f'./charts/{title}.png')
     plt.close()
 
@@ -160,6 +168,8 @@ def plot_conversion(df, x, y, types, x_name, y_name):
     plt.xticks(x_list, rotation=45, fontsize=8)
     plt.xlim(x_list[0], x_list[-1])
     plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig(f'./charts/conversion {types}.png')
     plt.close()
 
@@ -216,6 +226,8 @@ def plot_by_ads(df, x, y, z, title):
     ax.tick_params(axis='y', labelsize=10)
     ax.tick_params(axis='x', labelsize=8, labelrotation=45)
     plt.tight_layout()
+    if not os.path.isdir("./charts"):
+        os.mkdir("./charts")
     plt.savefig(f'./charts/{title}.png')
     plt.close()
 
@@ -265,8 +277,7 @@ def run_all():
     
     #создаём директорию для хранения файлов
     #p=Path.cwd()
-    if not os.path.isdir(f"./charts"):
-        os.mkdir(f"./charts")
+    
     
     # шаг 5 строим графики
         # графики общих визитов и регистраций по дням
