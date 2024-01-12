@@ -299,7 +299,8 @@ def run_all():
 # In[11]:
 
 
-run_all()
+if __name__ = '__main__':
+    run_all()
 
 
 # In[ ]:
