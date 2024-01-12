@@ -247,8 +247,8 @@ def run_all():
     conversion.to_json('./conversion.json')
     
     # шаг 4 добавляем данные рекламы к общей базе данных
-    absolute_path = os.path.abspath('ads.csv')
-    ads=pd.read_csv(absolute_path)
+    absolute_path = Path.cwd()
+    ads=pd.read_csv(f'{absolute_path}/charts_project/data/ads.csv')
     ads['date']=pd.to_datetime(ads['date']).dt.date
     
     total_conversion=conversion.drop(['platform', 'conversion'], axis=1).groupby(['date_group']).agg('sum').reset_index()
@@ -264,9 +264,9 @@ def run_all():
     data_reg=df_registrations.groupby(['datetime', 'registration_type']).agg({'user_id':'count'}).reset_index()
     
     #создаём директорию для хранения файлов
-    p=Path.cwd()
-    if not os.path.isdir(f"{p}/charts"):
-        os.mkdir(f"{p}/charts")
+    #p=Path.cwd()
+    if not os.path.isdir(f"./charts"):
+        os.mkdir(f"./charts")
     
     # шаг 5 строим графики
         # графики общих визитов и регистраций по дням
